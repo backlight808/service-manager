@@ -1,0 +1,10 @@
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Welcome to the Dashboard</h1>
+    <div *ngIf="userDetails" class="user-info">
+      <p>User ID: {{ userDetails.userId }}</p>
+      <p>Username: {{ userDetails.username }}</p>
+      <p>Role: {{ userDetails.role }}</p>
+      </div>
+    <p class="dashboard-content">This is your personalized dashboard. You have successfully logged in.</p>
+    <button (click)="logout()" class="logout-button">Logout</button>
+  </div>
