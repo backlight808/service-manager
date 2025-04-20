@@ -3,11 +3,11 @@ const { connectToDatabase } = require('./config/config');
 const { processDeleteMessage } = require('./controllers/audit.controller'); // Import the controller function
 const logger = require('./utils/logger');
 const amqp = require('amqplib');
+const programRoutes = require('./routes/routes');
 
 const app = express();
 
 app.use(express.json());
-
 async function consumeMessages() {
   try {
     const connection = await amqp.connect(process.env.RABBITMQ_URL || 'amqp://localhost');

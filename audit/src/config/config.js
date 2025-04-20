@@ -8,7 +8,7 @@ const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'password',
-  database: process.env.DB_AUDIT_DATABASE || 'auditdb', // Use a separate database for audit logs
+  database: process.env.DB_AUDIT_DATABASE || 'medical_research_db', // Use a separate database for audit logs
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

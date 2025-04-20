@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const weatherController = require('../controllers/controller');
+const programController = require('../controllers/controller');
 const authController = require('../controllers/auth.controller');
 
 // Define API routes
-router.get('/all', weatherController.getAllWeatherData);
-router.post('/store', weatherController.createWeatherData);
-router.put('/update/:id', weatherController.updateWeatherData);
-router.delete('/remove/:id', weatherController.deleteWeatherData);
+router.get('/all', programController.getAllProgramData);
+router.post('/store', programController.createProgramData);
+router.put('/update/:id', programController.updateprogramData);
+router.delete('/remove/:id', programController.deleteProgramData);
 
 
 // Add login route

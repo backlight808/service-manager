@@ -1,3 +1,13 @@
+
+<div class="menu-bar" *ngIf="userDetails">
+    <div class="menu-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</div>
+    <div class="menu-item" routerLink="/programs" routerLinkActive="active">Programs</div>
+    <div class="menu-item" routerLink="/participants" routerLinkActive="active">Participants</div>
+    <div class=" "  *ngIf="userDetails">Welcome {{ userDetails.username }}( {{ userDetails.role }}) <button (click)="logout()" class="logout-button">Logout</button></div>
+   
+</div> 
+
+
 <router-outlet></router-outlet>
 <!-- 
 <h2>Weather Data</h2>

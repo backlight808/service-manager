@@ -3,7 +3,7 @@
 ```markdown
 # Audit Microservice
 
-This microservice listens for messages from the weather service when a record is deleted
+This microservice listens for messages from the program service when a record is deleted
 and stores an audit log in the database.
 
 ## Installation

@@ -1,10 +1,259 @@
-<div class="dashboard-container">
-    <h1 class="dashboard-title">Welcome to the Dashboard</h1>
-    <div *ngIf="userDetails" class="user-info">
-      <p>User ID: {{ userDetails.userId }}</p>
-      <p>Username: {{ userDetails.username }}</p>
-      <p>Role: {{ userDetails.role }}</p>
-      </div>
-    <p class="dashboard-content">This is your personalized dashboard. You have successfully logged in.</p>
-    <button (click)="logout()" class="logout-button">Logout</button>
+<div class="container-fluid mt-4">
+ 
+
+  <!-- <div *ngIf="userDetails.role === 'admin'" class="mb-4">
+    <button class="btn btn-primary" >Add Program</button>
+  </div> -->
+  <button class="btn btn-primary"  *ngIf="userDetails.role === 'admin'"
+    (click)="addProgram('Add Program', '')">
+   + Add Program
+  </button>
+  <br>
+  <br>
+  <div *ngIf="loading" class="text-center">Loading programs...</div>
+  <div *ngIf="error" class="alert alert-danger">
+    Error: {{ error }}
   </div>
+  <div *ngIf="success" class="success alert-success">
+    {{ success }} 
+  </div>
+
+  <div *ngIf="loading">Loading data...</div>
+  <!-- <div *ngIf="error">Error: {{ error }}</div> -->
+
+  <div *ngIf="ProgramData && ProgramData.length === 0">No Program data available.</div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Program Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Principal Investigator</th>
+        <th>Funding Amount</th>
+        <th>Description</th>
+        <th *ngIf="userDetails.role === 'admin'">Actions</th>
+        <!-- <th *ngIf="userDetails.role === 'admin'">Participants</th>
+        <th *ngIf="userDetails.role === 'user'">Apply</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let program of ProgramData">
+        <td>{{ program.program_name }}</td>
+        <td>{{ program.start_date | date:'dd/MM/yyyy' }}</td>
+        <td>{{ program.end_date | date:'dd/MM/yyyy' }}</td>
+        <td>{{ program.principal_investigator }}</td>
+        <td>{{ program.funding_amount |currency }}</td>
+        <td>{{ program.program_description }}</td>
+        <td *ngIf="userDetails.role === 'admin'">
+          <span class="mr-5">
+          <button class="btn btn-sm btn-primary " (click)="editProgram('Edit Program',program)">
+            Edit
+          </button></span>
+          <span>
+          <button class="btn btn-sm btn-danger" (click)="deleteProgram(program.program_id)">
+            Delete
+          </button></span>
+        </td>
+        <!--  <td *ngIf="userDetails.role === 'admin'">
+          <button class="btn btn-sm btn-info" (click)="viewParticipants(program.program_id)">
+            View Participants
+          </button>
+        </td>
+        <td *ngIf="userDetails.role === 'user'">
+          <button class="btn btn-sm btn-success" (click)="applyProgram(program.program_id)">
+            Apply
+          </button>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="ProgramData && ProgramData.length === 0 && !loading" class="text-center">
+    No ProgramData available.
+  </div>
+
+
+  <!-- <div class="modal-content" style="width: 500px; margin:0 auto;" *ngIf="editingProgram">
+   <!-- <div class="modal-header">
+       <h5 class="modal-title" id="programModalLabel">
+        {{ editingProgram ? 'Edit Program' : 'Add Program' }}
+      </h5> -->
+  <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button> 
+    </div>-->
+  <!-- <form>
+    <div class="modal-body" >
+     
+        <div class="form-group">
+          <label for="program_name">Program Name</label>
+          <input type="text" class="form-control" id="program_name" name="program_name" required [(ngModel)]="programForm.program_name" />
+          
+        </div>
+        <div class="form-group">
+          <label for="start_date">Start Date</label>
+          <input type="date" class="form-control" id="start_date" name="start_date" required   [(ngModel)]="programForm.start_date"/>
+         
+        </div>
+        <div class="form-group">
+          <label for="end_date">End Date</label>
+          <input type="date" class="form-control" id="end_date" name="end_date" required  [(ngModel)]="programForm.end_date" />
+         
+        </div>
+        <div class="form-group">
+          <label for="principal_investigator">Principal Investigator</label>
+          <input type="text" class="form-control" id="principal_investigator" name="principal_investigator" required  [(ngModel)]="programForm.principal_investigator"/>
+        </div>
+        
+
+        <div class="form-group">
+          <label for="funding_amount">Funding Amount</label>
+          <input type="number" class="form-control" id="funding_amount" name="funding_amount" required  [(ngModel)]="programForm.funding_amount" />
+         
+
+        </div>
+        <div class="form-group">
+          <label for="program_description">Program Description</label>
+          <textarea class="form-control" id="program_description" name="program_description" required   [(ngModel)]="programForm.program_description"></textarea>
+    </div>
+     
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-primary" (click)="saveProgram()">
+        Save
+      </button>
+    </div>
+  </form>
+  </div> -->
+
+
+
+  <div class="modal-content" style="display: none;">
+    <div class="modal-header">
+      <h5 class="modal-title" id="participantsModalLabel">
+        Participants in Program: {{ selectedProgramName }}
+      </h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="participantsLoading" class="text-center">
+        Loading participants...
+      </div>
+      <div *ngIf="participantsError" class="alert alert-danger">
+        Error: {{ participantsError }}
+      </div>
+
+      <table *ngIf="participants && participants.length > 0" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+            <th>Medical History</th>
+            <th>Consent Form</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let participant of participants">
+            <td>{{ participant.participant_name }}</td>
+            <td>{{ participant.date_of_birth }}</td>
+            <td>{{ participant.gender }}</td>
+            <td>{{ participant.medical_history }}</td>
+            <td>{{ participant.consent_form }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="participants && participants.length === 0 && !participantsLoading" class="text-center">
+        No participants found for this program.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h5 class="modal-title">{{ modalTitle }}</h5>
+      <button class="close-button" (click)="closeModal()">×</button>
+    </div>
+    <!-- Add your modal content here -->
+    <div class="modal-body">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+            <h5 class="modal-title" id="programModalLabel">
+             {{ editingProgram ? 'Edit Program' : 'Add Program' }}
+           </h5> -->
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button> 
+         </div>-->
+        <form>
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label for="program_name">Program Name</label>
+              <input type="text" class="form-control" id="program_name" name="program_name" required
+                [(ngModel)]="programForm.program_name" />
+
+            </div>
+            <div class="form-group">
+              <label for="start_date">Start Date</label>
+              <input type="date" class="form-control" id="start_date" name="start_date" required
+                [(ngModel)]="programForm.start_date" />
+
+            </div>
+            <div class="form-group">
+              <label for="end_date">End Date</label>
+              <input type="date" class="form-control" id="end_date" name="end_date" required
+                [(ngModel)]="programForm.end_date" />
+
+            </div>
+            <div class="form-group">
+              <label for="principal_investigator">Principal Investigator</label>
+              <input type="text" class="form-control" id="principal_investigator" name="principal_investigator" required
+                [(ngModel)]="programForm.principal_investigator" />
+            </div>
+
+
+            <div class="form-group">
+              <label for="funding_amount">Funding Amount</label>
+              <input type="number" class="form-control" id="funding_amount" name="funding_amount" required
+                [(ngModel)]="programForm.funding_amount" />
+
+
+            </div>
+            <div class="form-group">
+              <label for="program_description">Program Description</label>
+              <textarea class="form-control" id="program_description" name="program_description" required
+                [(ngModel)]="programForm.program_description"></textarea>
+            </div>
+
+          </div>
+
+        </form>
+      </div>
+
+
+    </div>
+    <!-- Add your modal content here -->
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)="saveProgram()">
+        Save
+      </button>
+      <button type="button" class="btn btn-primary" (click)="editSaveProgram()">
+        Confirm Edit
+      </button>
+    </div>
+  </div>
+</div>

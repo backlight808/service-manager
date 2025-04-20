@@ -1,5 +1,5 @@
 const express = require('express');
-const weatherRoutes = require('./routes/routes');
+const programRoutes = require('./routes/routes');
 const { connectToDatabase } = require('./config/config');
 const logger = require('./utils/logger');
 const cors = require('cors'); // Import the cors middleware
@@ -14,8 +14,8 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); 
 app.use(cors({ origin: 'http://localhost:4200' }));
 
-// Mount the weather routes
-app.use('/weather', weatherRoutes);
+// Mount the program routes
+app.use('/program', programRoutes);
 
 // Connect to the database
 connectToDatabase()
