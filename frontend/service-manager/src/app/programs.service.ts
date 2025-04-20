@@ -39,5 +39,10 @@ export class ProgramService {
   editProgramData(body:any): Observable<ProgramData[]> {
     return this.http.put<ProgramData[]>(this.apiUrl+'/update/'+body.program_id, body);
   }
+
+  applyForProgram(body:any): Observable<ProgramData[]> {
+    debugger;
+    return this.http.post<ProgramData[]>(this.apiUrl+'/apply', body);
+  }
 }
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const programController = require('../controllers/controller');
 const authController = require('../controllers/auth.controller');
+const userController = require('../controllers/user.controller');
 
 // Define API routes
 router.get('/all', programController.getAllProgramData);
@@ -12,6 +13,9 @@ router.delete('/remove/:id', programController.deleteProgramData);
 
 // Add login route
 router.post('/login', authController.login); // New login route
+
+//add user route
+router.post('/apply', userController.applyForProgram); // New login route
 
 
 module.exports = router;

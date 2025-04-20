@@ -1,42 +1,6 @@
-
 <div class="menu-bar" *ngIf="userDetails">
-    <div class="menu-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</div>
-    <div class="menu-item" routerLink="/programs" routerLinkActive="active">Programs</div>
-    <div class="menu-item" routerLink="/participants" routerLinkActive="active">Participants</div>
-    <div class=" "  *ngIf="userDetails">Welcome {{ userDetails.username }}( {{ userDetails.role }}) <button (click)="logout()" class="logout-button">Logout</button></div>
-   
-</div> 
-
-
-<router-outlet></router-outlet>
-<!-- 
-<h2>Weather Data</h2>
-<div *ngIf="loading">Loading weather data...</div>
-<div *ngIf="error">Error: {{ error }}</div>
-<div *ngIf="weatherData && weatherData.length > 0">
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>City</th>
-        <th>Temperature</th>
-        <th>Conditions</th>
-        <th>Humidity</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of weatherData">
-        <td>{{ data.id }}</td>
-        <td>{{ data.city }}</td>
-        <td>{{ data.temperature }}</td>
-        <td>{{ data.conditions }}</td>
-        <td>{{ data.humidity }}</td>
-        <td>{{ data.latitude }}</td>
-        <td>{{ data.longitude }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="menu-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</div>
+  <div class=" " *ngIf="userDetails">Welcome {{ userDetails.username }}( {{ userDetails.role }}) <button
+      (click)="logout()" class="logout-button">Logout</button></div>
 </div>
-<div *ngIf="weatherData && weatherData.length === 0">No weather data available.</div> -->
+<router-outlet></router-outlet>

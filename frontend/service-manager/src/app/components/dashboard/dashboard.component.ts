@@ -89,6 +89,7 @@ export class DashboardComponent implements OnInit {
     this.modalTitle = title;
     this.editingProgram = true;
     this.showModal = true;
+    this.programForm={};// Reset the form data
   }
   saveProgram() { 
     console.log(this.programForm);
